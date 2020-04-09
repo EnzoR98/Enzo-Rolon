@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Transform playerTransform;
-    public float altura;
-    public float distance;
+    public float yPos;
+    public float zAxisDistance;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +16,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(0, altura, playerTransform.position.z - distance);
+        transform.position = new Vector3(0, yPos, playerTransform.position.z - zAxisDistance);
     }
 }
