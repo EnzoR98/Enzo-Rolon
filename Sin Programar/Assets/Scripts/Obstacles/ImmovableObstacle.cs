@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class ImmovableObstacle : MonoBehaviour
 {
-    public float pushForce;
-    public float jumpForce;
-
     private void OnCollisionEnter(Collision col)
     {
         if (col.gameObject.CompareTag("Vehicle"))
         {
+            //Change car speed to 0.
             CarController vehicle = col.gameObject.GetComponent<CarController>();
-            vehicle.rb.AddForce(new Vector3(0, 1 * jumpForce, -1 * pushForce), ForceMode.Impulse);
+            vehicle.rb.velocity = Vector3.zero;
         }
     }
 }
