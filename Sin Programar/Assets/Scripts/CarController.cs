@@ -5,12 +5,14 @@ using UnityEngine;
 public class CarController : MonoBehaviour
 {
     private InputPlayer input;
-    private Rigidbody rb;
+    [HideInInspector]public Rigidbody rb;
     public float speed;
     public float rotationSpeed;
     public float rotationAngle;
     public float maxSpeed;
+    public float gravityForce;
     // Start is called before the first frame update
+
     void Start()
     {
         input = GetComponent<InputPlayer>();
@@ -20,6 +22,8 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        //Needs to be accelerating a little bit to rotate the car;
         if(input.yAxis < -0.2f || input.yAxis > 0.2f)
         {
             rotationAngle += (input.xAxis * rotationSpeed);
@@ -28,7 +32,15 @@ public class CarController : MonoBehaviour
                 rotationAngle = 0;
             }
         }
-        //Debug.Log(rigidbody.velocity.z);
+        
+        //Avoid flying car
+        if (transform.position.y > 0.03f)
+        {
+            transform.position = new Vector3(transform.position.x, 0.03f, transform.position.z);
+        }
+
+        //Add a Gravity Force.
+        rb.AddForce(Vector3.down * gravityForce, ForceMode.Acceleration);
     }
 
     private void FixedUpdate()
