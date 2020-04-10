@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class FlyingObstacle : MonoBehaviour
 {
-    public float fuerza;
-    Vector3 direccion;
+    public float force;
+    Vector3 direction;
     Rigidbody rb;
-    float xRotation;
-    float yRotation;
-    float zRotation;
-    private bool volando;
+    float[] axisRotationValues = new float [3];
+    private bool flying;
     
 
     private void Start()
@@ -20,12 +18,17 @@ public class FlyingObstacle : MonoBehaviour
 
     private void Update()
     {
-        if (volando)
+        ObstacleRandomRotation();
+    }
+
+    private void ObstacleRandomRotation()
+    {
+        if (flying)
         {
-            xRotation += xRotation;
-            yRotation += yRotation;
-            zRotation += zRotation;
-            transform.rotation = Quaternion.Euler(xRotation, yRotation, zRotation);
+            axisRotationValues[0] += axisRotationValues[0];
+            axisRotationValues[1] += axisRotationValues[1];
+            axisRotationValues[2] += axisRotationValues[2];
+            transform.rotation = Quaternion.Euler(axisRotationValues[0], axisRotationValues[1], axisRotationValues[2]);
         }
     }
 
@@ -33,14 +36,23 @@ public class FlyingObstacle : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Vehicle"))
         {
+            
             CarController vehicle = col.gameObject.GetComponent<CarController>();
-            direccion = transform.position - col.transform.position;
-            rb.AddRelativeForce(direccion.normalized * fuerza * vehicle.rb.velocity.z , ForceMode.Impulse);
-            xRotation = Random.Range(0, 30);
-            yRotation = Random.Range(0, 30);
-            zRotation = Random.Range(0, 30);
-            volando = true;
-            Destroy(this.gameObject, 1f);
+            
+            direction = transform.position - col.transform.position;
+
+            //Add a Force relative to car impact direction and its speed.
+            rb.AddRelativeForce(direction.normalized * force * Mathf.Abs(vehicle.rb.velocity.z), ForceMode.Impulse);
+
+            //Assign 3 random values that will be used to rotate this asset.
+            for(int i = 0; i<axisRotationValues.Length; i++)
+            {
+                axisRotationValues[i] = Random.Range(0, 30f);
+            }
+            
+            flying = true;
+
+            Destroy(this.gameObject, 1f); //ALERT Check how this works whit more than 2 seconds.
             
         }
     }
