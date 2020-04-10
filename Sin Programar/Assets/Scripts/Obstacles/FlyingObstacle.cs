@@ -4,15 +4,44 @@ using UnityEngine;
 
 public class FlyingObstacle : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public float fuerza;
+    Vector3 direccion;
+    Rigidbody rb;
+    float xRotation;
+    float yRotation;
+    float zRotation;
+    private bool volando;
+    
+
+    private void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (volando)
+        {
+            xRotation += xRotation;
+            yRotation += yRotation;
+            zRotation += zRotation;
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, zRotation);
+        }
+    }
+
+    private void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.CompareTag("Vehicle"))
+        {
+            CarController vehicle = col.gameObject.GetComponent<CarController>();
+            direccion = transform.position - col.transform.position;
+            rb.AddRelativeForce(direccion.normalized * fuerza * vehicle.rb.velocity.z , ForceMode.Impulse);
+            xRotation = Random.Range(0, 30);
+            yRotation = Random.Range(0, 30);
+            zRotation = Random.Range(0, 30);
+            volando = true;
+            Destroy(this.gameObject, 1f);
+            
+        }
     }
 }
