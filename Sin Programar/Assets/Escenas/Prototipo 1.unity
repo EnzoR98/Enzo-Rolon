@@ -998,7 +998,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xAxis: 0
   yAxis: 0
-  leftShift: 0
 --- !u!54 &425882717
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1027,13 +1026,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69d4d993ef911f2428acc55688475dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intangibleAbilityTime: 3
-  intangibleOn: 0
+  abilityTime: 3
   coolDownTime: 6
   obstaclesMask:
     serializedVersion: 2
     m_Bits: 256
-  sphereRadius: 2.78
+  sphereRadius: 2.8
   origin: {x: 0, y: 1, z: 0}
   carMaterials:
   - {fileID: 2100000, guid: 7cce38ba40b7d05439de10ddde5afaf6, type: 2}
