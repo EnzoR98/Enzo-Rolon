@@ -10,6 +10,7 @@ public class CarController : MonoBehaviour
     public float rotationSpeed;
     public float rotationAngle;
     public float maxSpeed;
+    public float gravityForce;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,23 +21,20 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(input.yAxis < -0.2f || input.yAxis > 0.2f)
+        //Avoid flying car
+        if (transform.position.y > 0.03f)
         {
-            rotationAngle += (input.xAxis * rotationSpeed);
-            if(rotationAngle > 360 || rotationAngle < -360)
-            {
-                rotationAngle = 0;
-            }
+            transform.position = new Vector3(transform.position.x, 0.03f, transform.position.z);
         }
-        //Debug.Log(rigidbody.velocity.z);
     }
 
     private void FixedUpdate()
     {
         CarMovement();
+
+        //Add a Gravity Force.
+        rb.AddForce(Vector3.down * gravityForce);
     }
-
-
 
     void CarMovement()
     {
@@ -45,5 +43,15 @@ public class CarController : MonoBehaviour
 
         //Turn
         transform.rotation = Quaternion.Euler(transform.rotation.x, rotationAngle, transform.rotation.z);
+
+        //Needs to be accelerating a little bit to rotate the car;
+        if (input.yAxis < -0.2f || input.yAxis > 0.2f)
+        {
+            rotationAngle += (input.xAxis * rotationSpeed);
+            if (rotationAngle > 360 || rotationAngle < -360)
+            {
+                rotationAngle = 0;
+            }
+        }
     }
 }
