@@ -39,7 +39,7 @@ public class FlyingObstacle : MonoBehaviour
             
             CarController vehicle = col.gameObject.GetComponent<CarController>();
             
-            direction = (transform.position + (Vector3.up)) - col.transform.position;
+            direction = transform.position - col.transform.position + new Vector3(0, 0.5f, 0);
 
             //Add a Force relative to car impact direction and its speed.
             rb.AddRelativeForce(direction.normalized * force * Mathf.Abs(vehicle.rb.velocity.z), ForceMode.Impulse);
@@ -56,4 +56,5 @@ public class FlyingObstacle : MonoBehaviour
             
         }
     }
+    
 }

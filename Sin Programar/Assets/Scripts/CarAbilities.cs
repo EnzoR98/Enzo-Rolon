@@ -11,10 +11,10 @@ public class CarAbilities : MonoBehaviour
     public float coolDownTime;
     private bool onCoolDown;
     private bool canDeactivate;
-    
+
     public LayerMask obstaclesMask;
     public float sphereRadius;
-    [HideInInspector]public Vector3 origin;
+    [HideInInspector] public Vector3 origin;
 
     private MeshRenderer carMesh;
     public Material[] carMaterials;
@@ -76,5 +76,5 @@ public class CarAbilities : MonoBehaviour
         Gizmos.DrawSphere(transform.position + origin, sphereRadius);
     }
     */
-    
+
 }

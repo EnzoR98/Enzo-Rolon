@@ -13,4 +13,5 @@ public class ImmovableObstacle : MonoBehaviour
             vehicle.rb.velocity = Vector3.zero;
         }
     }
+    
 }
