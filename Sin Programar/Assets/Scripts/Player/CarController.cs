@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    private InputPlayer input;
-    [HideInInspector]public Rigidbody rb;
-    public float speed;
-    public float rotationSpeed;
-    public float rotationAngle;
-    public float maxSpeed;
-    public float gravityForce;
-    public GameObject[] wheels;
-    // Start is called before the first frame update
 
-    void Start()
+    #region Auto Properties
+    [SerializeField, HideInInspector] private InputPlayer input = null;
+    [SerializeField, HideInInspector] private Rigidbody rb = null;
+    #endregion
+    
+    [SerializeField] private float speed;
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private float rotationAngle;
+    [SerializeField] private float maxSpeed;
+    [SerializeField] private float gravityForce;
+    [SerializeField] private GameObject[] wheels;
+
+    #region Auto Properties
+#if UNITY_EDITOR
+    private void OnEnable()
     {
-        input = GetComponent<InputPlayer>();
-        rb = GetComponent<Rigidbody>();
+        if(null == input)
+            input = GetComponent<InputPlayer>();
+        if(null == rb)
+            rb = GetComponent<Rigidbody>();
     }
+#endif
+    #endregion
 
-    // Update is called once per frame
     void Update()
     {
         //Avoid flying car
