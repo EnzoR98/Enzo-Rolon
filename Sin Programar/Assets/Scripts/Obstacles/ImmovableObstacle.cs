@@ -8,9 +8,7 @@ public class ImmovableObstacle : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Vehicle"))
         {
-            //Change car speed to 0.
-            CarController vehicle = col.gameObject.GetComponent<CarController>();
-            vehicle.rb.velocity = Vector3.zero;
+           col.gameObject.GetComponent<Rigidbody>().velocity = Vector3.zero;
         }
     }
     
