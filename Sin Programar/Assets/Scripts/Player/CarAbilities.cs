@@ -6,18 +6,22 @@ public class CarAbilities : MonoBehaviour
 {
     private MeshCollider carCollider;
     public float abilityTime;
-    private float timeToDeactivate;
     private float recoveryTime;
     public float coolDownTime;
-    private bool onCoolDown;
-    private bool canDeactivate;
 
     public LayerMask obstaclesMask;
     public float sphereRadius;
     [HideInInspector] public Vector3 origin;
 
     private MeshRenderer carMesh;
-    public Material[] carMaterials;
+    public Material[] carMaterials;                       
+
+    #region Luciano
+    public bool IsActive { get; set; }
+
+    private Coroutine passThroughRoutine = null;
+    #endregion
+
 
     // Start is called before the first frame update
     void Start()
@@ -26,48 +30,50 @@ public class CarAbilities : MonoBehaviour
         carMesh = GetComponent<MeshRenderer>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        IntangibleAbility();
+        if (null == passThroughRoutine)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                passThroughRoutine = StartCoroutine(PassTrhoughRoutine());
+            }
+        }
     }
 
-    private void IntangibleAbility()
+    private IEnumerator PassTrhoughRoutine()
     {
-        //Turn car collider a trigger, start the ability countdown time, and restart cooldown time.
-        if (Input.GetKeyDown(KeyCode.LeftShift) && !onCoolDown)
-        {
-            carCollider.isTrigger = true;
+        // Activo el efecto
+        SetPassThroughState(true);
 
-            timeToDeactivate = Time.time + abilityTime;
-            recoveryTime = Time.time + coolDownTime;
-            onCoolDown = true;
+        // Espero la duracion
+        yield return new WaitForSeconds(abilityTime);
 
-            carMesh.material = carMaterials[1];
-        }
+        // Cuando finaliza la duracion, espero salir de posible penetracion
+        yield return StartCoroutine(CheckSphereRoutine());
 
-        //This verify if we are trespassing an object to not deactivate the trigger and avoid the car getting stuck in an object when getting tangible again
-        if (Physics.CheckSphere(transform.position + origin, sphereRadius, obstaclesMask))
-        {
-            canDeactivate = false;
-        }
-        else
-        {
-            canDeactivate = true;
-        }
+        // Termino duracion y no hay penetracion, desactivo el efecto
+        SetPassThroughState(false);
 
-        //Deactivate the trigger after a time (intangibleAbilityTime).
-        if (timeToDeactivate < Time.time && canDeactivate)
-        {
-            carCollider.isTrigger = false;
-            carMesh.material = carMaterials[0];
-        }
+        // Una vez que el efecto realmente esta desactivado, empiezo el CD
+        yield return new WaitForSeconds(recoveryTime);
 
-        //Finish the cooldown, allows to activate the ability again.
-        if (recoveryTime < Time.time)
+        passThroughRoutine = null;
+    }
+
+    private void SetPassThroughState(bool state)
+    {
+        IsActive = state;
+        carCollider.isTrigger = state;
+        carMesh.material = carMaterials[state ? 1 : 0];
+    }
+
+    IEnumerator CheckSphereRoutine()
+    {
+        do
         {
-            onCoolDown = false;
-        }
+            yield return new WaitForFixedUpdate();
+        } while (Physics.CheckSphere(transform.position + origin, sphereRadius, obstaclesMask));
     }
 
     /*
