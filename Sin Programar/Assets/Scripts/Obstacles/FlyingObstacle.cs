@@ -36,13 +36,10 @@ public class FlyingObstacle : MonoBehaviour
     {
         if (col.gameObject.CompareTag("Vehicle"))
         {
-            
-            CarController vehicle = col.gameObject.GetComponent<CarController>();
-            
             direction = transform.position - col.transform.position + new Vector3(0, 0.5f, 0);
 
             //Add a Force relative to car impact direction and its speed.
-            rb.AddRelativeForce(direction.normalized * force * Mathf.Abs(vehicle.rb.velocity.z), ForceMode.Impulse);
+            rb.AddRelativeForce(force * col.impulse, ForceMode.Impulse);
 
             //Assign 3 random values that will be used to rotate this asset.
             for(int i = 0; i<axisRotationValues.Length; i++)
